@@ -1,0 +1,39 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="My" GeneratedClassName="MySettings" UseMySettingsClassName="true">
+  <Profiles />
+  <Settings>
+    <Setting Name="SelectedPrinter" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="PaperWidth" Type="System.String" Scope="User">
+      <Value Profile="(Default)">80</Value>
+    </Setting>
+    <Setting Name="SelectedLogo" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Logos/InmejorableTicket.png</Value>
+    </Setting>
+    <Setting Name="SelectedUser" Type="System.String" Scope="User">
+      <Value Profile="(Default)">CAJA </Value>
+    </Setting>
+    <Setting Name="FinalMessage" Type="System.String" Scope="User">
+      <Value Profile="(Default)">12000BsD</Value>
+    </Setting>
+    <Setting Name="IsTerminal" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="TerminalImagePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Logos/LogoInmejorable.png</Value>
+    </Setting>
+    <Setting Name="ImprimirLogo" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ImprimirUsuario" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ImprimirMensajeFinal" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="IsBacklot" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
