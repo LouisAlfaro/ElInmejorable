@@ -32,12 +32,10 @@ Partial Class Form1
         NotifyIcon1 = New NotifyIcon(components)
         ContextMenuStrip1 = New ContextMenuStrip(components)
         SalirToolStripMenuItem = New ToolStripMenuItem()
-        pgCajero = New PictureBox()
         CType(WebView21, ComponentModel.ISupportInitialize).BeginInit()
         panelOverlay.SuspendLayout()
         CType(picBoxTerminal, ComponentModel.ISupportInitialize).BeginInit()
         ContextMenuStrip1.SuspendLayout()
-        CType(pgCajero, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
         ' 
         ' WebView21
@@ -127,39 +125,22 @@ Partial Class Form1
         SalirToolStripMenuItem.Size = New Size(96, 22)
         SalirToolStripMenuItem.Text = "Salir"
         ' 
-        ' pgCajero
-        ' 
-        pgCajero.Anchor = AnchorStyles.Top
-        pgCajero.BackColor = Color.FromArgb(CByte(27), CByte(27), CByte(27))
-        pgCajero.BackgroundImageLayout = ImageLayout.Stretch
-        pgCajero.Location = New Point(156, 2)
-        pgCajero.Margin = New Padding(0)
-        pgCajero.Name = "pgCajero"
-        pgCajero.Padding = New Padding(7, 6, 7, 6)
-        pgCajero.Size = New Size(396, 55)
-        pgCajero.SizeMode = PictureBoxSizeMode.CenterImage
-        pgCajero.TabIndex = 3
-        pgCajero.TabStop = False
-        pgCajero.Visible = False
-        ' 
         ' Form1
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(700, 338)
         Controls.Add(panelOverlay)
-        Controls.Add(pgCajero)
         Controls.Add(btnOTerminal)
         Controls.Add(WebView21)
         KeyPreview = True
         Margin = New Padding(3, 2, 3, 2)
         Name = "Form1"
-        Text = "El inmejorable v1.4"
+        Text = "El inmejorable v1.6"
         CType(WebView21, ComponentModel.ISupportInitialize).EndInit()
         panelOverlay.ResumeLayout(False)
         CType(picBoxTerminal, ComponentModel.ISupportInitialize).EndInit()
         ContextMenuStrip1.ResumeLayout(False)
-        CType(pgCajero, ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
     End Sub
 
@@ -171,6 +152,5 @@ Partial Class Form1
     Friend WithEvents SalirToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents btnOTerminal As Button
     Friend WithEvents btnATerminal As Button
-    Friend WithEvents pgCajero As PictureBox
 
 End Class

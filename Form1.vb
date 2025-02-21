@@ -171,11 +171,7 @@ Public Class Form1
                 picBoxTerminal.Image = Nothing
             End If
 
-            If Not String.IsNullOrEmpty(My.Settings.TerminalImagePath) AndAlso File.Exists(My.Settings.TerminalImagePath) Then
-                pgCajero.Image = Image.FromFile(My.Settings.TerminalImagePath)
-            Else
-                pgCajero.Image = Nothing
-            End If
+
 
 
             Debug.WriteLine($"Valor de My.Settings.IsTerminal en Load: {My.Settings.IsTerminal}")
@@ -365,7 +361,7 @@ Public Class Form1
             If isTerminal Then
                 panelOverlay.Visible = True
                 picBoxTerminal.Visible = True
-                pgCajero.Visible = False
+
                 If isVisible Then
                     btnOTerminal.Visible = False
                 End If
@@ -385,7 +381,7 @@ Public Class Form1
             Else
                 panelOverlay.Visible = False
                 picBoxTerminal.Visible = False
-                pgCajero.Visible = True
+
 
                 Debug.WriteLine("Panel configurado como Oculto (Cajero).")
             End If

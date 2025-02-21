@@ -24,7 +24,6 @@ Public Class backlot
     Private mouseProc As LowLevelMouseProc = AddressOf MouseHookCallback
     Private hookId As IntPtr = IntPtr.Zero
 
-    ' Estructura para almacenar información del mouse
     <StructLayout(LayoutKind.Sequential)>
     Private Structure MSLLHOOKSTRUCT
         Public pt As Point
@@ -34,7 +33,6 @@ Public Class backlot
         Public dwExtraInfo As IntPtr
     End Structure
 
-    ' Configuración del hook global
     <DllImport("user32.dll", SetLastError:=True)>
     Private Shared Function SetWindowsHookEx(idHook As Integer, lpfn As LowLevelMouseProc, hMod As IntPtr, dwThreadId As UInteger) As IntPtr
     End Function
@@ -51,20 +49,100 @@ Public Class backlot
     Private Shared Function GetModuleHandle(lpModuleName As String) As IntPtr
     End Function
 
-    ' Callback para manejar clics del mouse
     Private Function MouseHookCallback(nCode As Integer, wParam As IntPtr, lParam As IntPtr) As IntPtr
         If nCode >= 0 AndAlso wParam = CType(WM_LBUTTONDOWN, IntPtr) Then
             Dim mouseInfo As MSLLHOOKSTRUCT = Marshal.PtrToStructure(Of MSLLHOOKSTRUCT)(lParam)
             Dim cursorPosition As Point = mouseInfo.pt
 
-            ' Verificar si el clic ocurrió fuera del formulario
             If Not Me.Bounds.Contains(cursorPosition) Then
-                Me.Close() ' Cerrar el formulario si el clic es fuera
+                Me.Close()
             End If
         End If
-
         Return CallNextHookEx(hookId, nCode, wParam, lParam)
     End Function
+
+    Private Sub AjustarFormulario()
+        Dim screenWidth As Integer = Screen.PrimaryScreen.Bounds.Width
+        Dim screenHeight As Integer = Screen.PrimaryScreen.Bounds.Height
+
+        Dim baseWidth As Double = 1585
+        Dim baseHeight As Double = 790
+        Debug.WriteLine("screenWidth: " & screenWidth & " | screenHeight: " & screenHeight)
+
+        Dim scaleFactor As Double = Math.Min(screenWidth / baseWidth,
+                                         screenHeight / baseHeight)
+
+        Dim newWidth As Integer = CInt(baseWidth * scaleFactor)
+        Dim newHeight As Integer = CInt(baseHeight * scaleFactor)
+
+        If newWidth > screenWidth Then newWidth = screenWidth
+        If newHeight > screenHeight Then newHeight = screenHeight
+
+        Dim offsetFromBottom As Integer = 0
+        Dim extraHeight As Integer = 0
+
+
+
+        If screenWidth <= 800 Then
+            offsetFromBottom = 70
+            extraHeight = 60
+        ElseIf screenWidth <= 1024 Then
+            offsetFromBottom = 50
+            extraHeight = 130
+        ElseIf screenWidth <= 1280 Then
+            If screenHeight <= 720 Then
+                offsetFromBottom = 5
+                extraHeight = 10
+            ElseIf screenHeight <= 800 Then
+                offsetFromBottom = 20
+                extraHeight = 70
+            ElseIf screenHeight <= 1024 Then
+                offsetFromBottom = 10
+                extraHeight = 300
+            End If
+        ElseIf screenWidth <= 1366 Then
+            offsetFromBottom = 10
+            extraHeight = 5
+        ElseIf screenWidth <= 1440 Then
+            offsetFromBottom = 40
+            extraHeight = 60
+        ElseIf screenWidth <= 1600 Then
+            offsetFromBottom = 30
+            extraHeight = 5
+        ElseIf screenWidth <= 1680 Then
+            offsetFromBottom = 40
+            extraHeight = 100
+        ElseIf screenWidth <= 1920 Then
+            offsetFromBottom = 0
+            extraHeight = 40
+        Else
+            offsetFromBottom = 0
+            extraHeight = 0
+        End If
+
+        newHeight += extraHeight
+
+        If newHeight > screenHeight Then
+            newHeight = screenHeight
+        End If
+
+        Me.Width = newWidth
+        Me.Height = newHeight
+
+
+        Me.Left = (screenWidth - Me.Width) \ 2
+
+
+        Me.Top = screenHeight - Me.Height - offsetFromBottom
+
+
+        Debug.WriteLine("offsetFromBottom: " & offsetFromBottom & " | extraHeight: " & extraHeight)
+    End Sub
+
+
+    Private Sub backlot_Resize(sender As Object, e As EventArgs) Handles MyBase.Resize
+        AjustarFormulario()
+    End Sub
 
     Private Async Sub backlot_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.ShowInTaskbar = False
@@ -81,25 +159,7 @@ Public Class backlot
         inactivityTimer.Start()
 
         lastMousePosition = Cursor.Position
-
-        Dim screenWidth As Integer = Screen.PrimaryScreen.Bounds.Width
-        Dim screenHeight As Integer = Screen.PrimaryScreen.Bounds.Height
-
-        Dim modelWidth As Double = 1585
-        Dim modelHeight As Double = 790
-        Dim topOffset As Double = 78
-
-        Dim moduleHandle As IntPtr = GetModuleHandle(Process.GetCurrentProcess().MainModule.ModuleName)
-        hookId = SetWindowsHookEx(WH_MOUSE_LL, mouseProc, moduleHandle, 0)
-
-        Dim scaleFactor As Double = Math.Min(screenWidth / modelWidth, screenHeight / (modelHeight + topOffset))
-
-        Me.Left = 0
-        Me.Top = CInt(topOffset * scaleFactor)
-        Me.Width = CInt(modelWidth * scaleFactor)
-        Me.Height = CInt(modelHeight * scaleFactor)
-
-        Me.TopMost = False
+        AjustarFormulario()
 
         Try
 
@@ -273,12 +333,10 @@ Public Class backlot
             Debug.WriteLine("Inactividad detectada. Cerrando formulario Backlot.")
             Me.Close()
         Else
-            ' Si hubo actividad en el último intervalo, lo reseteamos para la siguiente comprobación
             isActivityDetected = False
             Debug.WriteLine("Actividad detectada en el último intervalo. Continuando.")
         End If
     End Sub
-
 
     Private Sub ResetInactivityTimer(sender As Object, e As EventArgs)
         isActivityDetected = True
@@ -312,10 +370,8 @@ Public Class backlot
 
                     Debug.WriteLine($"Contenido de la solicitud de login: {content}")
 
-                    ' Supongamos que viene algo tipo: usuario=pepe&contraseña=1234
                     Dim parsed = HttpUtility.ParseQueryString(content)
 
-                    ' Ajusta los nombres de campos según el HTML real:
                     Dim user As String = parsed("usuario")
                     Dim pass As String = parsed("contraseña")
 
@@ -349,16 +405,15 @@ Public Class backlot
 
 
                     requestData("apuesta") = String.Join(",", keyValuePairs.GetValues("apuesta[]"))
-                    requestData("evento") = String.Join(",", keyValuePairs.GetValues("evento[]")) ' Extrae el primer valor
+                    requestData("evento") = String.Join(",", keyValuePairs.GetValues("evento[]"))
                     requestData("opcion") = String.Join(",", keyValuePairs.GetValues("opcion[]"))
-                    requestData("horaSorteo") = keyValuePairs.GetValues("horaSorteo[]")?.FirstOrDefault() ' Extrae el primer valor
-                    requestData("juego") = keyValuePairs.GetValues("juego[]")?.FirstOrDefault() ' Extrae el primer valor
+                    requestData("horaSorteo") = keyValuePairs.GetValues("horaSorteo[]")?.FirstOrDefault()
+                    requestData("juego") = keyValuePairs.GetValues("juego[]")?.FirstOrDefault()
                     requestData("hora") = keyValuePairs("hora")
                     requestData("total") = keyValuePairs("total")
 
                     Debug.WriteLine($"Total capturado: {requestData("total")}")
 
-                    ' Depuración de los datos capturados
                     Debug.WriteLine($"Apuesta: {requestData("apuesta")}")
                     Debug.WriteLine($"Evento: {requestData("evento")}")
                     Debug.WriteLine($"Opciones: {requestData("opcion")}")
@@ -394,8 +449,6 @@ Public Class backlot
             Debug.WriteLine($"Error guardando credenciales Backlot: {ex.Message}")
         End Try
     End Sub
-
-
 
     Private Sub backlot_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
         If hookId <> IntPtr.Zero Then
@@ -459,8 +512,6 @@ Public Class backlot
         End Try
     End Sub
 
-
-
     Private Function ExtractRequestData(content As Stream, key As String) As String
         Try
             If content Is Nothing Then Return ""
@@ -472,6 +523,7 @@ Public Class backlot
             Return ""
         End Try
     End Function
+
     Private Sub OnMouseMove(sender As Object, e As EventArgs)
         Dim currentMousePosition As Point = Cursor.Position
         If Not currentMousePosition.Equals(lastMousePosition) Then
@@ -494,5 +546,11 @@ Public Class backlot
             Return New List(Of String)()
         End Try
     End Function
+
+    Private Sub backlot_Deactivate(sender As Object, e As EventArgs) Handles MyBase.Deactivate
+        Me.Close()
+    End Sub
+
+
 End Class
 
